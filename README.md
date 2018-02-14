@@ -1,10 +1,12 @@
 # configuron
 
-Simple environ based config that reloads itself from `project.clj` when in dev mode.
+Clojure(Script) envion compatible config that reloads from `project.clj` when in dev mode.
 
 [![Clojars Project](https://img.shields.io/clojars/v/rocks.clj/configuron.svg)](https://clojars.org/rocks.clj/configuron)
 
 ## Usage
+
+### Clojure
 
 1. Add `:mode` keys for each of your profiles in `project.clj`
 
@@ -14,6 +16,74 @@ Simple environ based config that reloads itself from `project.clj` when in dev m
 ```
 
 2. Access your config through `rocks.clj.configuron.core/env` instead of `environ.core/env`.
+
+### ClojureScript
+
+You can use your config on client-side as well.
+Simply add GET route `/environ` to your project with handler `rocks.clj.configuron.core/config-handler`:
+```clojure
+(GET "/environ" [] #'config-handler)
+```
+By default your client-side config will be empty.
+To add some data you should add paths to `:client-config-keys`.
+For example given your profiles look like this.
+```clojure
+{:profiles {:dev {:env {:mode :dev
+                        :debug-info {:tokens {:sentry ""}}
+                        :client-config-keys [[:mode]
+                                             [:debug-info :tokens]]}}
+            :uberjar {:env {:mode :uberjar
+                            :client-config-keys [[:mode]]}}}}
+```
+`/environ` ring handler will return.
+
+In dev:
+```clojure
+{:mode :dev
+ :debug-info {:tokens {:sentry ""}}}
+```
+In prod:
+```clojure
+{:mode :dev}
+```
+
+You can access your config on client side as usual through `rocks.clj.configuron.core/env`
+or dynamically by executing http request to `/environ`.
+
+### Caution
+
+When accessing `rocks.clj.configuron.core/env` on page load (for example cljs app entry point),
+there is no guarantee that config has been received by that time.
+There are two solutions for that.
+
+1. Wrap your code in go block
+```clojure
+(go
+  (let [env (or (<! rocks.clj.configuron.core/fetcher)
+                rocks.clj.configuron.core/env)]
+    ;; your web-app initialization goes here
+    ))
+```
+
+or (preferably)
+
+2. Write your config into dom on server side.
+This will also effectively avoid http request to `/environ`.
+
+Example in html:
+
+```html
+<body>
+  <div id="config" transit="your config goes here" />
+</body>
+```
+
+Example in hiccup:
+
+```clojure
+[:body
+ [:div#config {:transit (rocks.clj.configuron.core/get-client-config)}]]
+```
 
 ## License
 
