@@ -1,12 +1,8 @@
 (ns rocks.clj.configuron.core
   (:require [cljs-http.client :as http]
             [cljs.core.async :refer [<! >! alts! timeout]]
-            [cognitect.transit :as t])
+            [rocks.clj.transit.core :refer [from-transit]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
-
-(defn from-transit [in]
-  (let [reader (t/reader :json)]
-    (t/read reader in)))
 
 (defn get-encoded-data [id]
   (-> (.getElementById js/document id)

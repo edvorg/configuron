@@ -7,9 +7,8 @@
                  [org.clojure/clojurescript "1.9.908" :scope "provided"]
                  [yogthos/config "0.9"]
                  [hawk "0.2.11"]
-                 [com.cognitect/transit-clj "0.8.300"]
                  [cljs-http "0.1.43"]
-                 [com.cognitect/transit-cljs "0.8.243"]]
+                 [rocks.clj/transit "0.1.0-SNAPSHOT"]]
   :plugins [[lein-cljsbuild "1.1.7"]]
   :clean-targets ^{:protect false} [:target-path
                                     [:cljsbuild :builds :app :compiler :output-dir]

@@ -1,7 +1,7 @@
 (ns rocks.clj.configuron.core
   (:require [config.core :as config]
             [hawk.core :as hawk]
-            [cognitect.transit :as t]))
+            [rocks.clj.transit.core :refer [to-transit]]))
 
 (defn get-project-env [mode project]
   (try
@@ -36,12 +36,6 @@
                                                                     read-string
                                                                     (get-project-env :dev)
                                                                     (merge old-env)))))}])))
-
-(defn to-transit [msg]
-  (let [out (java.io.ByteArrayOutputStream. 4096)
-        writer (t/writer out :json)]
-    (t/write writer msg)
-    (str out)))
 
 (defn get-client-config []
   (->> (:client-config-keys env)
