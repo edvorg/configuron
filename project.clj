@@ -1,4 +1,4 @@
-(defproject rocks.clj/configuron "0.1.0-SNAPSHOT"
+(defproject rocks.clj/configuron "0.1.0"
   :description "Simple environ based config that reloads itself in dev mode"
   :url "https://github.com/edvorg/configuron"
   :license {:name "Eclipse Public License"
