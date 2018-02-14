@@ -1,8 +1,18 @@
 # configuron
 
-Clojure(Script) envion compatible config that reloads from `project.clj` when in dev mode.
+Clojure(Script) [environ](https://github.com/weavejester/environ) compatible config that reloads from `project.clj` when in dev mode.
 
 [![Clojars Project](https://img.shields.io/clojars/v/rocks.clj/configuron.svg)](https://clojars.org/rocks.clj/configuron)
+
+## Why
+
+configuron is a configuration library that has interface of environ, but provides additional features.
+
+- easy to migrate from environ
+- env variable is updated every time you update your `project.clj`
+- `clojurescript` support. you can access your config on frontend the same way you do it on backend.
+- server-side rendering ready design. let's you choose whether you want to get config using ajax or encode it in html page.
+- filtering rules for client side config in order to limit information, that's available to the client.
 
 ## Usage
 
@@ -44,7 +54,7 @@ In dev:
 ```
 In prod:
 ```clojure
-{:mode :dev}
+{:mode :uberjar}
 ```
 
 You can access your config on client side as usual through `rocks.clj.configuron.core/env`
