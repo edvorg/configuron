@@ -1,6 +1,6 @@
 (ns rocks.clj.configuron.core
   (:require [cljs-http.client :as http]
-            [cljs.core.async :refer [<! >! alts! timeout]]
+            [cljs.core.async :refer [<! >! alts! timeout chan]]
             [rocks.clj.transit.core :refer [from-transit]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
@@ -11,9 +11,14 @@
 
 (def env (get-encoded-data "config"))
 
-(def fetcher (go
-               (if (= nil? env)
-                 (let [{:keys [body] :as r} (<! (http/get "/environ"))]
-                   (set! env body)
-                   body)
-                 env)))
+(defn get-env []
+  (let [c (chan 1)]
+    (go
+      (when (nil? env)
+        (let [{:keys [body]} (<! (http/get "/environ"))
+              new-env        (if (nil? body)
+                               {}
+                               body)]
+          (set! env new-env)))
+      (>! c env))
+    c))
