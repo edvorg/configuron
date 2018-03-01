@@ -69,8 +69,7 @@ There are two solutions for that.
 1. Wrap your code in go block
 ```clojure
 (go
-  (let [env (or (<! rocks.clj.configuron.core/fetcher)
-                rocks.clj.configuron.core/env)]
+  (let [env (<! (rocks.clj.configuron.core/get-env))]
     ;; your web-app initialization goes here
     ))
 ```
