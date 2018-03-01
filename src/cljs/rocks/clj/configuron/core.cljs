@@ -5,9 +5,9 @@
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (defn get-encoded-data [id]
-  (-> (.getElementById js/document id)
-      (.getAttribute "transit")
-      (from-transit)))
+  (some-> (.getElementById js/document id)
+          (.getAttribute "transit")
+          (from-transit)))
 
 (def env (get-encoded-data "config"))
 
