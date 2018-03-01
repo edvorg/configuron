@@ -12,10 +12,8 @@
 (def env (get-encoded-data "config"))
 
 (def fetcher (go
-               (if (seq env)
-                 env
-                 (do
-                   (println "requesting config")
-                   (let [{:keys [body] :as r} (<! (http/get "/environ"))]
-                     (set! env body)
-                     body)))))
+               (if (= nil? env)
+                 (let [{:keys [body] :as r} (<! (http/get "/environ"))]
+                   (set! env body)
+                   body)
+                 env)))
